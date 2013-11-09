@@ -23,8 +23,10 @@ long_line_behaviour=1
 long_line_column=72
 
 [files]
-current_page=0
-FILE_NAME_0=830;HTML;0;16;1;1;0;%2Fhome%2Fbuyle%2FDocuments%2Fgit%2Fdcmtl-drupal-javascript%2Findex.html;0;4
+current_page=2
+FILE_NAME_0=13134;HTML;0;EUTF-8;1;1;0;%2Fhome%2Fbuyle%2FDocuments%2Fgit%2Fdcmtl-drupal-javascript%2Findex.html;0;4
+FILE_NAME_1=66;Markdown;0;EUTF-8;0;1;0;%2Fhome%2Fbuyle%2FDocuments%2Fgit%2Fdcmtl-drupal-javascript%2FREADME.md;0;4
+FILE_NAME_2=3625;Diff;0;EUTF-8;0;1;0;%2Fhome%2Fbuyle%2FDocuments%2Fgit%2Fdrupal%2Fcore%2Fmodules%2Fmigrate%2Fimp-expand_D6_vocabulary_with_node_types-2121715-2.patch;0;4
 
 [VTE]
 last_dir=/home/buyle

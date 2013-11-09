@@ -47,9 +47,9 @@
                     <h2>Adding JavaScript to pages</h2>
                     <p>
                         <ul>
-                            <li class="fragment">Include a JavaScript file on every pages of the site.<pre><code class="ini">scripts[] = awesomeness.js</code></pre></li>
-                            <li class="fragment">Include JavaScript on a page.<pre><code class="php">drupal_add_js($data, $options)</code></pre></li>
-                            <li class="fragment">Include JavaScript on a renderable array.<pre><code class="php">$element['#attached']['js'] = array($data => $options)</code></pre></li>
+                            <li>Include a JavaScript file on every pages of the site.<pre><code class="ini">scripts[] = awesomeness.js</code></pre></li>
+                            <li>Include JavaScript on a page.<pre><code class="php">drupal_add_js($data, $options)</code></pre></li>
+                            <li>Attach JavaScript to a <a href="https://drupal.org/node/930760">renderable array</a>.<pre><code class="php">$element['#attached']['js'][] = array($data => $options)</code></pre></li>
                         </ul>
                     </p>
                     </section>
@@ -67,8 +67,8 @@
                     <section id="drupal-add-js">
                         <h2>drupal_add_js()</h2>
                         <p>
-                            <pre><code class="php" data-trim>drupal_add_js('path/to/awesomeness.js', 'file')</code></pre>
                             Add JavaScript to the currently rendered page.
+                            <pre><code class="php" data-trim>drupal_add_js('path/to/awesomeness.js', 'file')</code></pre>
                             <pre class="fragment"><code class="php" data-trim>drupal_add_js('alert("Awesome!");', 'inline');</code></pre>
                             <pre class="fragment"><code class="php" data-trim>drupal_add_js(array('myAwesomeModule' => array(
     'foo' => 'bar',
@@ -78,7 +78,7 @@
                         </p>
                     </section>
                     <section id="drupal-add-js-options">
-                        <h2>drupal_add_js()</h2>
+                        <h2>$options</h2>
                         <p>
                             <pre><code class="php" data-trim>
 drupal_add_js('path/to/awesomeness.js', array(
@@ -96,15 +96,16 @@ drupal_add_js('path/to/awesomeness.js', array(
                     <section id="hash-attached">
                         <h2>#attached</h2>
                         <p>
-                            <pre><code class="php">$element['#attached']['js'] = array($data => $options);</code></pre>
+                            Attach JavaScript to a <a href="https://drupal.org/node/930760">renderable array</a>.
+                            <pre><code class="php">$element['#attached']['js'][] = array($data => $options);</code></pre>
                             Invoke drupal_add_js($data, $options) when $element is rendered.
-                            <pre class="fragment"><code class="php" data-trim>$element['#attached']['js'] = array('path/to/awesomeness.js', 'file')</code></pre>
-                            <pre class="fragment"><code class="php" data-trim>$element['#attached']['js'] = array('alert("Awesome!");', 'inline');</code></pre>
-                            <pre class="fragment"><code class="php" data-trim>$element['#attached']['js'] = array(array('myAwesomeModule' => array(
+                            <pre class="fragment"><code class="php" data-trim>$element['#attached']['js'][] = array('path/to/awesomeness.js', 'file')</code></pre>
+                            <pre class="fragment"><code class="php" data-trim>$element['#attached']['js'][] = array('alert("Awesome!");', 'inline');</code></pre>
+                            <pre class="fragment"><code class="php" data-trim>$element['#attached']['js'][] = array(array('myAwesomeModule' => array(
     'foo' => 'bar',
     'bar' => 'foo',
 )), 'setting');</code></pre>
-                            <pre class="fragment"><code class="php" data-trim>$element['#attached']['js'] = array('//aweso.me/ness.js', 'external');</code></pre>
+                            <pre class="fragment"><code class="php" data-trim>$element['#attached']['js'][] = array('//aweso.me/ness.js', 'external');</code></pre>
 
                         </p>
                     </section>
@@ -113,11 +114,14 @@ drupal_add_js('path/to/awesomeness.js', array(
                     <section id="writing-javascript">
                         <h2>Writing JavaScript</h2>
                         <p>
-                            <ul>
-                                <li class="fragment">jQuery.noConflict</li>
-                                <li class="fragment">Drupal.behaviors</li>
-                                <li class="fragment">jQuery.once</li>
-                                <li class="fragment">Drupal.settings</li>
+                            Things to known and use when writing JavaScript for Drupal
+                            <ul class="fragment">
+                                <li>jQuery.noConflict</li>
+                                <li>Drupal.behaviors</li>
+                                <li>jQuery.once</li>
+                                <li>Drupal.settings</li>
+                                <li>Drupal.theme</li>
+                                <li>Drupal.t</li>
                             </ul>
                          </p>
                     </section>
@@ -127,7 +131,7 @@ drupal_add_js('path/to/awesomeness.js', array(
                             <ul>
                                 <li><code>$</code> <strong>is not</strong> the jQuery object.</li>
                                 <li class="fragment">Code should be wrapped in an <a href="http://stage.learn.jquery.com/javascript-101/functions/#immediately-invoked-function-expression">Immediately Invoked Function Expression</a>.
-                                <pre class="fragment"><code class="javascript" data-trim>
+                                <pre><code class="javascript" data-trim>
 (function($) {
   // Here $ is the jQuery object
 })(jQuery);
@@ -145,15 +149,16 @@ Drupal.behaviors.doSomething = {
   attach: function(context, settings) {
     // do something here
                             </code></pre>
-                            <pre class="fragment"><code class="php">  }
+                            <span class="fragment">Also used when element are removed, moved or serialized.
+                            <pre><code class="php">  }
   detach: function(context, settings, trigger) {
-    // Clean up here</code></pre>
+    // do something here too</code></pre></span>
                             <pre><code class="php">  }
 }</code></pre>
-                            <div class="fragment">Used by the Drupal AJAX framework and well-behaving contribs.</div>
-                            <pre class="fragment"><code class="php" data-trim>
+                            <span class="fragment">Attach and detach behavior altering the DOM
+                            <pre><code class="php" data-trim>
 Drupal.attachBehaviors(context, [settings])
-Drupal.detachBehaviors(context, [settings], [trigger])</code></pre>
+Drupal.detachBehaviors(context, [settings], [trigger])</code></pre></span>
                         </p>
                     </section>
                     <section id="jquery-once">
@@ -171,29 +176,27 @@ $('div.something', context).once('do-something');
                     <section id="drupal-settings">
                         <h2>Drupal.settings</h2>
                         <p>
-                          <ul>
-                            <li class="fragment">Set from PHP<pre><code class="php" data-trim>drupal_add_js(
+                          Passing values from PHP to Javascript
+                            <div class="fragment"><pre><code class="php" data-trim>drupal_add_js(
   array('myAwesomeModule' => array(
     'foo' => 'bar',
     'bar' => 'foo',
   )
-), 'setting');</code></pre></li>
-                            <li class="fragment">Get from JavaScript<pre><code class="javascript" data-trim>
+), 'setting');</code></pre></div>
+                            <div class="fragment"><pre><code class="javascript" data-trim>
+
 Drupal.settings.myAwesomeModule.foo;
 Drupal.settings.myAwesomeModule.bar;
-                            </code></pre></li>
-                            <li class="fragment">Injected in behaviors' <code>attach</code> and <code>detach</code> functions.<pre><code class="javascript" data-trim>
 Drupal.behaviors.doSomething = {
   attach: function(context, settings) {
     settings.myAwesomeModule.foo
   }
 }
-                                </code></pre></li>
-                            </ul>
+                                </code></pre></div>
                         </p>
                     </section>
                     <section id="writing-javascript-summary">
-                        <h2>Writing JavaScript</h2>
+                        <h2>Summary</h2>
                         <p>
                                 <pre><code class="javascript" data-trim>
 (function($) {
@@ -209,18 +212,49 @@ Drupal.behaviors.doSomething = {
                                 </code></pre>
                             </p>
                     </section>
+                    <section id="drupal-theme">
+                        <h2>Drupal.theme</h2>
+                        <p>
+                            Theme functions in JavaScript.
+                            <pre><code class="javascript" data-trim>
+Dupal.theme.prototype.awesome = function(str) {
+  return '<span class="awesome">' + str + '</span>';
+}
+                            </code></pre>
+                            <pre><code class="javascript" data-trim>
+var html = Drupal.theme('awesome', 'Hello World');
+                            </code></pre>
+                            <pre class="fragment"><code class="javascript" data-trim>
+Dupal.theme.awesome = function(str) {
+  return '<div class="awesome">' + str + '</div>';
+}
+                            </code></pre>
+                        </p>
+                    </section>
+                    <section id="drupal-t">
+                        <h2>Drupal.t</h2>
+                        Translate strings to the page language or a given language.<pre><code class="javascript" data-trim>Drupal.t(str, args, options)</code></pre>
+                        <div class="fragment">
+                            <h3>And friends</h3>
+                            <ul>
+                                <li>Format a string containing a count of items.<pre><code class="javascript" data-trim>Drupal.formatPlural(count, singular, plural, args, options)</code></pre></li>
+                                <li>Replace placeholders with sanitized values in a string.<pre><code class="javascript" data-trim>Drupal.formatString(str, args)</code></pre></li>
+                                <li>Encode special characters in a plain-text string for display as HTML.<pre><code class="javascript" data-trim>Drupal.checkPlain(str)</code></pre></li>
+                            </ul>
+                        </div>
+                    </section>
                 </section>
                 <section>
                     <section id="javascript-libraries">
                         <h2>JavaScript Libraries</h2>
-                        <p>A library defines a set of <strong>JavaScript files</strong> <span class="fragment">and/or <strong>CSS files</strong></span><span class="fragment">, optionally using <strong>settings</strong></span><span class="fragment">, and optionally <strong>requiring</strong> another library.</span></p>
+                        <p>Writing re-usable JavaScript with dependencies management.</p>
                     </section>
                     <section id="hook-library">
-                        <h2>Declare a library</h2>
                         <p>
+                            A library defines a set of <strong>JavaScript files</strong>
                             <pre><code class="php" data-trim>
 /**
- * Implements hook_library()
+ * Implements hook_library().
  */
 awesome_library() {
   return array(
@@ -228,21 +262,22 @@ awesome_library() {
       'title' => 'Awesome Library',
       'website' => 'http://aweso.me/',
       'version' => '1.0.0'
-      'js' => array($data => $options),
-      'css' => array($data => $options),
-      'dependencies' => array(
+      'js' => array('full/path/to/awesome.js' => array()),
+</code></pre><span class="fragment">and/or <strong>CSS files</strong><pre><code class="php">      'css' => array('full/path/to/awesome.css' => array()),
+</code></pre></span><span class="fragment">optionally using <strong>settings</strong><pre><code class="php">      'js' => array(array('type' => 'setting', 'data' => $settings)),
+</code></pre></span><span class="fragment">and optionally <strong>requiring</strong> another library<pre><code class="php">      'dependencies' => array(
         array($module, $library),
       )
-    ),
+</code></pre></span><pre><code class="php">    ),
   )
-}
-                            </code></pre>
+}</code></pre>
                         </p>
                     </section>
                     <section id="drupal-add-library">
                         <h2>Using a library</h2>
                         <p>
                             <pre><code class="php" data-trim>drupal_add_library($module, $library)</code></pre>
+                            <pre><code class="php">$element['#attached']['library'][] = array($module, $library)</code></pre>
                         </p>
                     </section>
                     <section id="core-libraries">
@@ -260,22 +295,27 @@ awesome_library() {
                     </section>
                 </section>
                 <section>
+                    <section id="third-party-libraries">
+                        <h2>Third party libraries</h2>
+                        <p>
+                            How to use and manage third party libraries.
+                        </p>
+                    </section>
                     <section id="library-api">
                         <h2>Library API</h2>
+                        <a href="http://drupal.org/project/libraries">http://drupal.org/project/libraries</a>
                         <ul>
-                            <li>The same library can be shared by more than one module.</li>
+                            <li>Keep libraries out in site/&lt;domain&gt;/libraries.</li>
                             <li>The same library can be shared by more than one site.</li>
                             <li>Ease the process of upgrading a module that requires an external library.</li>
                             <li>Prevent incompatibilities due to having the same library installed more than once in different versions.</li>
-                            <li>Central installation instructions (widget) to help users figure out how to install.</li>
-                            <li>Library classification.</li>
                             <li>Dependency handling.</li>
                             <li>Library version detection.</li>
                             <li>Runtime control of library availability.</li>
                         </ul>
                     </section>
                     <section id="hook-libray-info">
-                        <h2>Declare an external library</h2>
+                        <h2>Declaring a 3rd party library</h2>
                         <pre><code class="php" data-trim>
 /**
  * Implements hook_libraries_info()
@@ -294,8 +334,8 @@ function awesome_libraries_info() {
   );
 );</code></pre>
                     </section>
-                    <section id="hook-library-external">
-                        <h2>Declare an external library (2)</h2>
+                    <section id="hook-library-glue">
+                        <h2>Libraries API and hook_library()</h2>
                         <pre><code class="php" data-trim>
 /**
  * Implements hook_library()
@@ -333,6 +373,20 @@ function awesome_library() {
 })(jQuery);
                             </code></pre>
                         </p>
+                </section>
+                <section id="references">
+                    <h2>References</h2>
+                    <ul>
+                        <li><a href="https://drupal.org/node/756722">Managing JavaScript in Drupal 7</a></li>
+                        <li><a href="https://coderwall.com/p/kd-4cg">JavaScript, jQuery and DOM Ready in Drupal 7</a></li>
+                        <li><a href="https://api.drupal.org">Drupal API documentation</a>
+                            <ul><a href="https://api.drupal.org/api/drupal/includes!common.inc/function/drupal_add_js/7">drupal_add_js()</a></ul>
+                            <ul><a href="https://api.drupal.org/api/drupal/includes!common.inc/function/drupal_add_library/7">drupal_add_library()</a></ul>
+                            <ul><a href="https://api.drupal.org/api/drupal/developer!topics!forms_api_reference.html/7#attached">#attached</a> and <a href="https://api.drupal.org/api/drupal/includes%21common.inc/function/drupal_process_attached/7">drupal_process_attached()</a></ul>
+                            <ul><a href="https://api.drupal.org/api/drupal/modules!system!system.api.php/function/hook_library/7">hook_library</a></ul>
+                        </li>
+                        <li><a href="https://drupal.org/project/libraries">Libraries API</a></li>
+                    </ul>
                 </section>
             </div>
 
